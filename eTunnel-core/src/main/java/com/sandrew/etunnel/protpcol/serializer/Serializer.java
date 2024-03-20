@@ -1,4 +1,5 @@
-package com.sandrew.etunnel.server.protocal.serializer;
+package com.sandrew.etunnel.protpcol.serializer;
+
 
 import java.io.Serializable;
 
@@ -43,7 +44,7 @@ public abstract class Serializer implements Serializable
      * @Description Get serializer by type
      * @Date 15:23 2024/3/18
      * @Param [type]
-     * @return com.sandrew.etunnel.server.protocal.serializer.Serializer
+     * @return com.sandrew.etunnel.protpcol.serializer.Serializer
      **/
     public static Serializer getSerializerByType(SerializerType type)
     {

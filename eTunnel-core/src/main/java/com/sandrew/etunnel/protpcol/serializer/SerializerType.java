@@ -1,4 +1,4 @@
-package com.sandrew.etunnel.server.protocal.serializer;
+package com.sandrew.etunnel.protpcol.serializer;
 
 /**
  * @ClassName SerializerType

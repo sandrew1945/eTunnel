@@ -1,4 +1,4 @@
-package com.sandrew.etunnel.server.protocal.serializer;
+package com.sandrew.etunnel.protpcol.serializer;
 
 /**
  * Created by summer on 2019/9/4.

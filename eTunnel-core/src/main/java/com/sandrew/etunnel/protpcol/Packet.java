@@ -1,16 +1,14 @@
-package com.sandrew.etunnel.server.protocal;
+package com.sandrew.etunnel.protpcol;
 
-
-import com.sandrew.etunnel.server.protocal.serializer.Serializer;
+import com.sandrew.etunnel.protpcol.serializer.Serializer;
 
 import java.io.Serializable;
 
 /**
+ * @ClassName Packet
+ * @Description
  * @Author summer
- * @Description  Data packet
- * @Date 15:18 2024/3/18
- * @Param
- * @return
+ * @Date 2024/3/19 11:01
  **/
 public abstract class Packet implements Serializable
 {
