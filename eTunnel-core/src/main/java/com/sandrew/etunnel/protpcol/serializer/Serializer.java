@@ -7,66 +7,68 @@ import java.io.Serializable;
  * @Author summer
  * @Description
  * @Date 16:00 2024/3/18
- * @Param 
- * @return 
+ * @Param
+ * @return
  **/
 public abstract class Serializer implements Serializable
 {
     /**
+     * @return byte
      * @Author summer
      * @Description Get serialize algorithm
      * @Date 15:23 2024/3/18
      * @Param []
-     * @return byte
      **/
     public abstract SerializerType getSerializerAlgorithm();
 
     /**
+     * @return byte[]
      * @Author summer
      * @Description Do serialize
      * @Date 15:23 2024/3/18
      * @Param [obj]
-     * @return byte[]
      **/
     public abstract byte[] serialize(Object obj);
 
     /**
+     * @return T
      * @Author summer
      * @Description Do deserialize
      * @Date 15:23 2024/3/18
      * @Param [bytes, clz]
-     * @return T
      **/
     public abstract <T> T deserialize(byte[] bytes, Class<T> clz);
 
     /**
+     * @return com.sandrew.etunnel.protpcol.serializer.Serializer
      * @Author summer
      * @Description Get serializer by type
      * @Date 15:23 2024/3/18
      * @Param [type]
-     * @return com.sandrew.etunnel.protpcol.serializer.Serializer
      **/
-    public static Serializer getSerializerByType(SerializerType type)
+    public static Serializer getSerializerByType(byte type)
     {
-        switch (type)
+        for (SerializerType value : SerializerType.values())
         {
-            case JAVA:
+            if (value.getType() == type)
             {
-                return new JavaSerializer();
-            }
-            case JSON:
-            {
-                return new JSONSerializer();
-            }
-            case HESSION:
-            {
-                return null;
-            }
-            default:
-            {
-                return new JavaSerializer();
+                switch (value)
+                {
+                    case JAVA:
+                    {
+                        return new JavaSerializer();
+                    }
+                    case JSON:
+                    {
+                        return new JSONSerializer();
+                    }
+                    case HESSIAN:
+                    {
+                        return new HessianSerializer();
+                    }
+                }
             }
         }
-
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.sandrew.etunnel.serialize;
+package com.sandrew.etunnel.test.serialize;
 
 import com.sandrew.etunnel.protpcol.serializer.HessianSerializer;
 import com.sandrew.etunnel.protpcol.serializer.JSONSerializer;
@@ -6,6 +6,7 @@ import com.sandrew.etunnel.protpcol.serializer.JavaSerializer;
 import com.sandrew.etunnel.protpcol.serializer.Serializer;
 import org.junit.jupiter.api.*;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,6 +92,7 @@ public class SerializerTest
         body.setMap(map);
         BodyChild bodyChild = new BodyChild("zhangsan", 86);
         body.setBodyChild(bodyChild);
+        body.setFile(new File("/Users/summer/Desktop/东北证券EtoC电子合同接口文档-信创版.pdf"));
         System.out.println("Data initialized ...");
     }
 }

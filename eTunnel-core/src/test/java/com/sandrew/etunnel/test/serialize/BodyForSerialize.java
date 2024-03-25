@@ -1,5 +1,6 @@
-package com.sandrew.etunnel.serialize;
+package com.sandrew.etunnel.test.serialize;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,8 @@ public class BodyForSerialize implements Serializable
     private Map map;
 
     private BodyChild bodyChild;
+
+    private File file;
 
     public String getStr1()
     {
@@ -131,6 +134,16 @@ public class BodyForSerialize implements Serializable
         return bodyChild;
     }
 
+    public File getFile()
+    {
+        return file;
+    }
+
+    public void setFile(File file)
+    {
+        this.file = file;
+    }
+
     public void setBodyChild(BodyChild bodyChild)
     {
         this.bodyChild = bodyChild;
@@ -167,8 +180,9 @@ public class BodyForSerialize implements Serializable
                                  list1 = %s,
                                  list2 = %s,
                                  map = %s,
-                                 bodyChild = %s}                                
-                """, str1, str2, int1, int2, double1, double2, list1.toString(), list2.toString(), map.toString(), bodyChild.toString().stripLeading()
+                                 bodyChild = %s,
+                                 file = %s}                                
+                """, str1, str2, int1, int2, double1, double2, list1.toString(), list2.toString(), map.toString(), bodyChild.toString().stripLeading(), file.toString()
         );
     }
 
@@ -180,12 +194,12 @@ public class BodyForSerialize implements Serializable
         if (o == null || getClass() != o.getClass())
             return false;
         BodyForSerialize that = (BodyForSerialize) o;
-        return int1 == that.int1 && Double.compare(that.double1, double1) == 0 && str1.equals(that.str1) && str2.equals(that.str2) && int2.equals(that.int2) && double2.equals(that.double2) && list1.equals(that.list1) && list2.equals(that.list2) && map.equals(that.map) && bodyChild.equals(that.bodyChild);
+        return int1 == that.int1 && Double.compare(that.double1, double1) == 0 && str1.equals(that.str1) && str2.equals(that.str2) && int2.equals(that.int2) && double2.equals(that.double2) && list1.equals(that.list1) && list2.equals(that.list2) && map.equals(that.map) && bodyChild.equals(that.bodyChild) && file.equals(that.file);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(str1, str2, int1, int2, double1, double2, list1, list2, map, bodyChild);
+        return Objects.hash(str1, str2, int1, int2, double1, double2, list1, list2, map, bodyChild, file);
     }
 }

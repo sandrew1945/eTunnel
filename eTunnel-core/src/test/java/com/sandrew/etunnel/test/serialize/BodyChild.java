@@ -1,4 +1,4 @@
-package com.sandrew.etunnel.serialize;
+package com.sandrew.etunnel.test.serialize;
 
 import java.io.Serializable;
 import java.util.Objects;

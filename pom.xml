@@ -22,6 +22,7 @@
         <jackson.version>2.17.0</jackson.version>
         <hessian.version>4.0.66</hessian.version>
         <maven.compiler.version>3.8.1</maven.compiler.version>
+        <commons-codec.version>1.16.1</commons-codec.version>
     </properties>
 
     <dependencyManagement>
@@ -50,6 +51,11 @@
                 <groupId>com.caucho</groupId>
                 <artifactId>hessian</artifactId>
                 <version>${hessian.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>

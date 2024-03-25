@@ -8,5 +8,20 @@ package com.sandrew.etunnel.protpcol.serializer;
  **/
 public enum SerializerType
 {
-    JAVA, JSON, HESSION
+    JAVA((byte) 0),
+    JSON((byte) 1),
+    HESSIAN((byte) 2);
+
+    SerializerType(byte type)
+    {
+        this.type = type;
+    }
+
+    private byte type;
+
+    public byte getType()
+    {
+        return type;
+    }
+
 }

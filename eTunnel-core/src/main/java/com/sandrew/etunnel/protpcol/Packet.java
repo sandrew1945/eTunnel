@@ -1,5 +1,6 @@
 package com.sandrew.etunnel.protpcol;
 
+import com.sandrew.etunnel.protpcol.serializer.SerializerType;
 import com.sandrew.etunnel.protpcol.serializer.Serializer;
 
 import java.io.Serializable;
@@ -18,13 +19,13 @@ public abstract class Packet implements Serializable
      *  获取序列化算法
      * @return
      */
-    public abstract byte getAlgorithm();
+    public abstract SerializerType getAlgorithm();
 
     /**
      *  获取指令
      * @return
      */
-    public abstract byte getCommand();
+    public abstract Command getCommand();
 
     /**
      *  获取序列化后的字节数组

@@ -13,7 +13,7 @@ public class HessianSerializer extends Serializer
     @Override
     public SerializerType getSerializerAlgorithm()
     {
-        return SerializerType.HESSION;
+        return SerializerType.HESSIAN;
     }
 
     @Override
