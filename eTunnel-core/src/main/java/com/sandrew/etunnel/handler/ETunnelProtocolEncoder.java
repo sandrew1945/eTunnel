@@ -1,4 +1,4 @@
-package com.sandrew.etunnel.codec;
+package com.sandrew.etunnel.handler;
 
 import com.sandrew.etunnel.protpcol.ETunnelProtocol;
 import io.netty.buffer.ByteBuf;

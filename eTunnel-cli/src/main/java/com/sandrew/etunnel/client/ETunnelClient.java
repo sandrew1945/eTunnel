@@ -1,9 +1,10 @@
 package com.sandrew.etunnel.client;
 
-import com.sandrew.etunnel.codec.ETunnelProtocolDecoder;
-import com.sandrew.etunnel.codec.ETunnelProtocolEncoder;
+import com.sandrew.etunnel.handler.ETunnelProtocolDecoder;
+import com.sandrew.etunnel.handler.ETunnelProtocolEncoder;
 import com.sandrew.etunnel.protpcol.ETunnelProtocol;
 import com.sandrew.etunnel.protpcol.UploadRequestPacket;
+import com.sandrew.etunnel.protpcol.UploadResponsePacket;
 import com.sandrew.etunnel.protpcol.serializer.JavaSerializer;
 import com.sandrew.etunnel.util.FileUtil;
 import io.netty.bootstrap.Bootstrap;
@@ -11,8 +12,6 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,16 +30,18 @@ public class ETunnelClient
     private static Logger log = LoggerFactory.getLogger(FileUploadHandler.class);
     private static EventLoopGroup workerGroup = new NioEventLoopGroup();
 
-    public void run(String host, int port)
+    private FileUploadHandler fileUploadHandler = new FileUploadHandler();
+
+    private Channel endpoint = null;
+
+    public void connect(String host, int port)
     {
-        Channel channel = null;
         try
         {
             Bootstrap client = new Bootstrap();
 
-            client.group(this.workerGroup).channel(NioSocketChannel.class).option(ChannelOption.SO_KEEPALIVE, true)
-                    //                    .attr(Attributes.USER_NAME, userName)
-                    //                    .attr(Attributes.PASSWORD, password)
+            client.group(this.workerGroup).channel(NioSocketChannel.class)
+                    .option(ChannelOption.SO_KEEPALIVE, true)
                     .handler(new ChannelInitializer<SocketChannel>()
                     {
                         @Override
@@ -48,57 +49,75 @@ public class ETunnelClient
                         {
                             ch.pipeline().addLast(new ETunnelProtocolDecoder())
                                     .addLast(new ETunnelProtocolEncoder())
-                                    .addLast(new FileUploadHandler());
+                                    .addLast(fileUploadHandler);
                         }
                     });
-            connect(client, host, port, 5);
+            this.endpoint = doConnect(client, host, port, 5);
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
-    private void connect(final Bootstrap client, final String host, final int port, final int retry)
+    private Channel doConnect(final Bootstrap client, final String host, final int port, final int retry)
     {
+        Channel channel = null;
         try
         {
-            client.connect(host, port).addListener(new GenericFutureListener<Future<? super Void>>()
+            ChannelFuture connectFuture = client.connect(host, port);
+            if (connectFuture.sync().isSuccess())
             {
-                @Override
-                public void operationComplete(Future<? super Void> future) throws Exception
+                channel = connectFuture.channel();
+            }
+            else
+            {
+                if (retry <= 0)
                 {
-                    if (future.isSuccess())
-                    {
-                        System.out.println("Client connect successful at port:" + port);
-                        // 启动控制台输入线程
-//                        future.wait();
-                        startConsoleInput(((ChannelFuture)future).channel());
-                    }
-                    else if (retry <= 0)
-                    {
-                        System.err.println("Clent connect failed and try more times.");
-                    }
-                    else
-                    {
-                        System.err.println("Client connect failed, Try it again!");
-                        client.config().group().schedule(new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                connect(client, host, port, retry - 1);
-                            }
-                        }, 5, TimeUnit.SECONDS);
-
-                    }
+                    log.error("Clent connect failed and try more times.");
                 }
-            });
+                else
+                {
+                    log.error("Client connect failed, Try it again!");
+                    client.config().group().schedule(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            doConnect(client, host, port, retry - 1);
+                        }
+                    }, 5, TimeUnit.SECONDS);
+                }
+            }
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
+        return channel;
+    }
+
+    public String fileUpload(File file)
+    {
+        try
+        {
+            UploadRequestPacket packet = new UploadRequestPacket(new JavaSerializer());
+            packet.setFileName(file.getName());
+            packet.setFile(file);
+            packet.setFileMD5(FileUtil.getFileMD5(file));
+            packet.setFileSuffix("txt");
+            packet.setFileSize(file.length());
+            //        this.endpoint.writeAndFlush(new ETunnelProtocol(packet));
+            fileUploadHandler.sendData(this.endpoint, packet);
+            UploadResponsePacket uploadResponsePacket = fileUploadHandler.receiveData();
+            return uploadResponsePacket.getFileId();
+        }
+        catch (InterruptedException e)
+        {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+
     }
 
     private void startConsoleInput(Channel channel)

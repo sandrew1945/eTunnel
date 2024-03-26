@@ -10,7 +10,14 @@ public class ServerStarter
 {
     public static void main(String[] args)
     {
-        ETunnelServer server = new ETunnelServer();
-        server.run(7000);
+        try
+        {
+            ETunnelServer server = new ETunnelServer();
+            server.run(7000);
+        }
+        catch (InterruptedException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }

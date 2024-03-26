@@ -1,7 +1,7 @@
 package com.sandrew.etunnel.server;
 
-import com.sandrew.etunnel.codec.ETunnelProtocolDecoder;
-import com.sandrew.etunnel.codec.ETunnelProtocolEncoder;
+import com.sandrew.etunnel.handler.ETunnelProtocolDecoder;
+import com.sandrew.etunnel.handler.ETunnelProtocolEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -24,7 +24,7 @@ public class ETunnelServer
 {
     private static Logger log = LoggerFactory.getLogger(FileUploadHandler.class);
 
-    public void run(int port)
+    public void run(int port) throws InterruptedException
     {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -53,6 +53,8 @@ public class ETunnelServer
         catch (Exception e)
         {
             log.error(e.getMessage(), e);
+            bossGroup.shutdownGracefully().sync();
+            workerGroup.shutdownGracefully().sync();
         }
     }
 

@@ -17,7 +17,7 @@ module com.sandrew.etunnel.core {
     exports com.sandrew.etunnel.protpcol to com.sandrew.etunnel.server, com.sandrew.etunnel.client, com.sandrew.etunnel.test;
     exports com.sandrew.etunnel.protpcol.serializer to com.sandrew.etunnel.server, com.sandrew.etunnel.client, com.sandrew.etunnel.test;
     exports com.sandrew.etunnel.util to com.sandrew.etunnel.test, com.sandrew.etunnel.client;
-    exports com.sandrew.etunnel.codec;
+    exports com.sandrew.etunnel.handler;
 
 
 }
