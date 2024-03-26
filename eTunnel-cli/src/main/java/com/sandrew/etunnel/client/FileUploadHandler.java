@@ -24,9 +24,10 @@ public class FileUploadHandler extends SyncChannelInboundHandler<UploadResponseP
     private static Logger log = LoggerFactory.getLogger(FileUploadHandler.class);
 
     @Override
-    public void sendData(Channel channel, UploadRequestPacket packet)
+    public FileUploadHandler sendData(Channel channel, UploadRequestPacket packet)
     {
         this.channelPromise = channel.writeAndFlush(new ETunnelProtocol(packet)).channel().newPromise();
+        return this;
     }
 
     @Override
@@ -46,10 +47,8 @@ public class FileUploadHandler extends SyncChannelInboundHandler<UploadResponseP
             UploadResponsePacket packet = serializer.deserialize(msg.getContent(), UploadResponsePacket.class);
             this.receivePacket = packet;
             this.channelPromise.setSuccess();
-            String fileId = packet.getFileId();
-            String fileUrl = packet.getFileUrl();
-            log.debug("fileId : " + fileId);
-            log.debug("fileUrl : " + fileUrl);
+            log.debug("fileId : " + packet.getFileId());
+            log.debug("fileUrl : " + packet.getFileUrl());
         }
         else
         {

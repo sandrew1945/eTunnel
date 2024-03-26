@@ -36,7 +36,9 @@ public class ETunnelCli
 
     public static void main(String[] args)
     {
-        String fileId = uploadFile(new File("/Users/summer/Desktop/计算机网络 自顶向下方法 (第七版).pdf"));
-        log.info("fileId =======> " + fileId);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            String fileId = uploadFile(new File("/Users/summer/Desktop/计算机网络 自顶向下方法 (第七版).pdf"));
+            log.info("fileId =======> " + fileId);
+        }));
     }
 }

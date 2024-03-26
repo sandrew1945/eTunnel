@@ -122,8 +122,8 @@ public class ETunnelClient
             packet.setFileSuffix("txt");
             packet.setFileSize(file.length());
             //        this.endpoint.writeAndFlush(new ETunnelProtocol(packet));
-            fileUploadHandler.sendData(this.endpoint, packet);
-            UploadResponsePacket uploadResponsePacket = fileUploadHandler.receiveData();
+//            UploadResponsePacket uploadResponsePacket = fileUploadHandler.sendData(this.endpoint, packet).receiveData();
+            UploadResponsePacket uploadResponsePacket = fileUploadHandler.sendAndReceive(this.endpoint, packet);
             return uploadResponsePacket.getFileId();
         }
         catch (InterruptedException e)
