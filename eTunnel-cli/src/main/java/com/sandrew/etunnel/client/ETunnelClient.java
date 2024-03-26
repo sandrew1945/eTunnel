@@ -5,7 +5,9 @@ import com.sandrew.etunnel.handler.ETunnelProtocolEncoder;
 import com.sandrew.etunnel.protpcol.ETunnelProtocol;
 import com.sandrew.etunnel.protpcol.UploadRequestPacket;
 import com.sandrew.etunnel.protpcol.UploadResponsePacket;
+import com.sandrew.etunnel.protpcol.serializer.HessianSerializer;
 import com.sandrew.etunnel.protpcol.serializer.JavaSerializer;
+import com.sandrew.etunnel.protpcol.serializer.Serializer;
 import com.sandrew.etunnel.util.FileUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -101,7 +103,19 @@ public class ETunnelClient
     {
         try
         {
-            UploadRequestPacket packet = new UploadRequestPacket(new JavaSerializer());
+            return fileUpload(file, new HessianSerializer());
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String fileUpload(File file, Serializer serializer)
+    {
+        try
+        {
+            UploadRequestPacket packet = new UploadRequestPacket(serializer);
             packet.setFileName(file.getName());
             packet.setFile(file);
             packet.setFileMD5(FileUtil.getFileMD5(file));
@@ -117,7 +131,6 @@ public class ETunnelClient
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
-
     }
 
     private void startConsoleInput(Channel channel)

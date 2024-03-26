@@ -36,6 +36,7 @@ public class FileUploadHandler extends SimpleChannelInboundHandler<ETunnelProtoc
             log.debug("fileMD5 : " + fileMD5);
             log.debug("fileName : " + fileName);
             log.debug("uploadFile : " + uploadFile);
+            log.debug("fileSize : " + fileSize);
             // 返回响应信息
             UploadResponsePacket repsonse = new UploadResponsePacket(serializer);
             repsonse.setFileId(UUID.randomUUID().toString());

@@ -24,6 +24,9 @@ public class UploadRequestPacket extends Packet
 
     private long fileSize;
 
+    public UploadRequestPacket()
+    {
+    }
 
     public UploadRequestPacket(Serializer aSerializer)
     {

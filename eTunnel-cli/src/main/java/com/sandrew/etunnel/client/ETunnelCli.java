@@ -1,5 +1,6 @@
 package com.sandrew.etunnel.client;
 
+import com.sandrew.etunnel.protpcol.serializer.JavaSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,14 +29,14 @@ public class ETunnelCli
     {
         ETunnelClient client = new ETunnelClient();
         client.connect("127.0.0.1", 7000);
-        return client.fileUpload(file);
+        return client.fileUpload(file, new JavaSerializer());
 //        client.run("127.0.0.1", 7000);
     }
 
 
     public static void main(String[] args)
     {
-        String fileId = uploadFile(new File("/Users/summer/Desktop/新建文本文档(1).txt"));
+        String fileId = uploadFile(new File("/Users/summer/Desktop/计算机网络 自顶向下方法 (第七版).pdf"));
         log.info("fileId =======> " + fileId);
     }
 }

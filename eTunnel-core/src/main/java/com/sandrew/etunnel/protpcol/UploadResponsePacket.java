@@ -15,6 +15,10 @@ public class UploadResponsePacket extends Packet
 
     private String fileUrl;
 
+    public UploadResponsePacket()
+    {
+    }
+
     public UploadResponsePacket(Serializer aSerializer)
     {
         this.serializer = aSerializer;
