@@ -1,11 +1,14 @@
 package com.sandrew.etunnel.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -73,13 +76,13 @@ public class FileUtil
         }
     }
 
-    public boolean upload(String filePath, InputStream in) throws Exception
+    public static boolean upload(String filePath, InputStream in) throws Exception
     {
         BufferedOutputStream bos = null;
         try
         {
             // 检测文件目录是否存在,如不存在,创建目录
-            File dir = new File(this.getDirectory(filePath));
+            File dir = new File(getDirectory(filePath));
             if (!dir.exists())
             {
                 dir.mkdirs();
@@ -119,13 +122,13 @@ public class FileUtil
     }
 
 
-    public boolean upload(String filePath, String fileName, InputStream in) throws Exception
+    public static boolean upload(String filePath, String fileName, InputStream in) throws Exception
     {
-        return this.upload(filePath + File.separator + fileName, in);
+        return upload(filePath + File.separator + fileName, in);
     }
 
 
-    public byte[] download(String filePath) throws Exception
+    public static byte[] download(String filePath) throws Exception
     {
         ByteArrayOutputStream bos = null;
         BufferedInputStream bis = null;
@@ -170,12 +173,12 @@ public class FileUtil
         }
     }
 
-    public byte[] download(String filePath, String fileName) throws Exception
+    public static byte[] download(String filePath, String fileName) throws Exception
     {
-        return this.download(filePath + File.separator + fileName);
+        return download(filePath + File.separator + fileName);
     }
 
-    public String createRandomFileName(String fileuploadFileName)
+    public static String createRandomFileName(String fileuploadFileName)
     {
         String nowTimeStr = ""; //保存当前时间
         String extName = ""; //扩展名
@@ -195,14 +198,45 @@ public class FileUtil
 
     /**
      * @Author summer
+     * @Description Get the file's extension
+     * @Date 14:40 2024/3/27
+     * @Param [file]
+     * @return java.lang.String
+     **/
+    public static String getFileExtension(File file)
+    {
+        String extension = FilenameUtils.getExtension(file.getName());
+        return extension;
+    }
+
+
+    public void test()
+    {
+        Files files;
+        try
+        {
+
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        Path path;
+//        Path.of();
+//        Files.createFile()
+    }
+
+    /**
+     * @Author summer
      * @Description 根据文件全部路径获取所在文件夹
      * @Date 10:32 2024/3/22
      * @Param [realPath]
      * @return java.lang.String
      **/
-    private String getDirectory(String realPath)
+    private static String getDirectory(String realPath)
     {
-        String directory = realPath.substring(0, realPath.lastIndexOf(File.separator));
+        String directory = FilenameUtils.getPath(realPath);
         return directory;
     }
 

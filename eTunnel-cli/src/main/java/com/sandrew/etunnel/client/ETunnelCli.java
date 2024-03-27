@@ -28,7 +28,7 @@ public class ETunnelCli
     public static String uploadFile(File file)
     {
         ETunnelClient client = new ETunnelClient();
-        client.connect("127.0.0.1", 7000);
+        client.connect("10.6.33.61", 7000);
         return client.fileUpload(file, new JavaSerializer());
 //        client.run("127.0.0.1", 7000);
     }
@@ -37,7 +37,7 @@ public class ETunnelCli
     public static void main(String[] args)
     {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            String fileId = uploadFile(new File("/Users/summer/Desktop/计算机网络 自顶向下方法 (第七版).pdf"));
+            String fileId = uploadFile(new File("C:\\Users\\Weib\\Desktop\\3.中证易签流程框架梳理.pdf"));
             log.info("fileId =======> " + fileId);
         }));
     }

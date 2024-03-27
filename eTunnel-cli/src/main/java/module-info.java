@@ -3,6 +3,6 @@ module com.sandrew.etunnel.client {
 
     requires com.sandrew.etunnel.core;
     requires io.netty.transport;
-    requires org.slf4j;
     requires io.netty.common;
+    requires org.slf4j;
 }

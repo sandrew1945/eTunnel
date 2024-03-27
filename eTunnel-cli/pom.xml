@@ -44,10 +44,20 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
-                    <excludes>
-                        <!--注意从编译结果目录开始算目录结构-->
-                        <exclude>/**/*.xml</exclude>
-                    </excludes>
+                    <outputDirectory>${project.build.directory}/${project.name}</outputDirectory>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.sandrew.etunnel.client.ETunnelCli</mainClass>
+                            <useUniqueVersions>false</useUniqueVersions>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>
+                                <![CDATA[.]]>
+                            </Class-Path>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>

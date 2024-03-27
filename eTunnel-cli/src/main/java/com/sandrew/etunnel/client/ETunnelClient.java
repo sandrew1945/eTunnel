@@ -119,7 +119,7 @@ public class ETunnelClient
             packet.setFileName(file.getName());
             packet.setFile(file);
             packet.setFileMD5(FileUtil.getFileMD5(file));
-            packet.setFileSuffix("txt");
+            packet.setFileSuffix(FileUtil.getFileExtension(file));
             packet.setFileSize(file.length());
             //        this.endpoint.writeAndFlush(new ETunnelProtocol(packet));
 //            UploadResponsePacket uploadResponsePacket = fileUploadHandler.sendData(this.endpoint, packet).receiveData();

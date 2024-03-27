@@ -33,6 +33,7 @@ public class FileUploadHandler extends SimpleChannelInboundHandler<ETunnelProtoc
             long fileSize = packet.getFileSize();
             String fileSuffix = packet.getFileSuffix();
             File uploadFile = packet.getFile();
+            log.debug("file : " + uploadFile.getPath());
             log.debug("fileMD5 : " + fileMD5);
             log.debug("fileName : " + fileName);
             log.debug("uploadFile : " + uploadFile);
