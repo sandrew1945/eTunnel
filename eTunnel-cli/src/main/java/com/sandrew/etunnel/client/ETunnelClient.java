@@ -2,11 +2,9 @@ package com.sandrew.etunnel.client;
 
 import com.sandrew.etunnel.handler.ETunnelProtocolDecoder;
 import com.sandrew.etunnel.handler.ETunnelProtocolEncoder;
-import com.sandrew.etunnel.protpcol.ETunnelProtocol;
 import com.sandrew.etunnel.protpcol.UploadRequestPacket;
 import com.sandrew.etunnel.protpcol.UploadResponsePacket;
 import com.sandrew.etunnel.protpcol.serializer.HessianSerializer;
-import com.sandrew.etunnel.protpcol.serializer.JavaSerializer;
 import com.sandrew.etunnel.protpcol.serializer.Serializer;
 import com.sandrew.etunnel.util.FileUtil;
 import io.netty.bootstrap.Bootstrap;
@@ -117,7 +115,7 @@ public class ETunnelClient
         {
             UploadRequestPacket packet = new UploadRequestPacket(serializer);
             packet.setFileName(file.getName());
-            packet.setFile(file);
+            packet.setFile(FileUtil.file2Bytes(file));
             packet.setFileMD5(FileUtil.getFileMD5(file));
             packet.setFileSuffix(FileUtil.getFileExtension(file));
             packet.setFileSize(file.length());
@@ -131,29 +129,5 @@ public class ETunnelClient
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
-    }
-
-    private void startConsoleInput(Channel channel)
-    {
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                while (!Thread.interrupted())
-                {
-
-                    File uploadFile = new File("/Users/summer/Desktop/新建文本文档(1).txt");
-                    UploadRequestPacket packet = new UploadRequestPacket(new JavaSerializer());
-                    packet.setFileName(uploadFile.getName());
-                    packet.setFile(uploadFile);
-                    packet.setFileMD5(FileUtil.getFileMD5(uploadFile));
-                    packet.setFileSuffix("txt");
-                    packet.setFileSize(uploadFile.length());
-                    channel.writeAndFlush(new ETunnelProtocol(packet));
-
-                }
-            }
-        }).start();
     }
 }

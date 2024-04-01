@@ -10,7 +10,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.UUID;
 
 /**
@@ -32,12 +31,13 @@ public class FileUploadHandler extends SimpleChannelInboundHandler<ETunnelProtoc
             String fileName = packet.getFileName();
             long fileSize = packet.getFileSize();
             String fileSuffix = packet.getFileSuffix();
-            File uploadFile = packet.getFile();
-            log.debug("file : " + uploadFile.getPath());
+            byte[] uploadFile = packet.getFile();
+            log.debug("file transmit size : " + uploadFile.length);
             log.debug("fileMD5 : " + fileMD5);
             log.debug("fileName : " + fileName);
             log.debug("uploadFile : " + uploadFile);
             log.debug("fileSize : " + fileSize);
+
             // 返回响应信息
             UploadResponsePacket repsonse = new UploadResponsePacket(serializer);
             repsonse.setFileId(UUID.randomUUID().toString());

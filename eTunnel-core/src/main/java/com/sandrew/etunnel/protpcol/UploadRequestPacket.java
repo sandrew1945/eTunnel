@@ -3,8 +3,6 @@ package com.sandrew.etunnel.protpcol;
 import com.sandrew.etunnel.protpcol.serializer.Serializer;
 import com.sandrew.etunnel.protpcol.serializer.SerializerType;
 
-import java.io.File;
-
 /**
  * @ClassName UploadRequestPacket
  * @Description
@@ -16,7 +14,7 @@ public class UploadRequestPacket extends Packet
 
     private String fileName;
 
-    private File file;
+    private byte[] file;
 
     private String fileMD5;
 
@@ -55,12 +53,12 @@ public class UploadRequestPacket extends Packet
         this.fileName = fileName;
     }
 
-    public File getFile()
+    public byte[] getFile()
     {
         return file;
     }
 
-    public void setFile(File file)
+    public void setFile(byte[] file)
     {
         this.file = file;
     }

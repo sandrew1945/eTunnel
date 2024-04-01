@@ -37,7 +37,7 @@ public class ETunnelCli
     public static void main(String[] args)
     {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            String fileId = uploadFile(new File("C:\\Users\\Weib\\Desktop\\3.中证易签流程框架梳理.pdf"));
+            String fileId = uploadFile(new File("/foo/bar/file.txt"));
             log.info("fileId =======> " + fileId);
         }));
     }

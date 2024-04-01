@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,11 +23,11 @@ public class FileUtil
     private static Logger log = LoggerFactory.getLogger(HessianUtil.class);
 
     /**
+     * @return java.lang.String
      * @Author summer
      * @Description Get the specify file's md5
      * @Date 13:57 2024/3/21
      * @Param [file]
-     * @return java.lang.String
      **/
     public static String getFileMD5(File file)
     {
@@ -57,11 +55,11 @@ public class FileUtil
     }
 
     /**
+     * @return java.lang.String
      * @Author summer
      * @Description Get the specify file's md5 use Apache Commons Codec
      * @Date 13:57 2024/3/21
      * @Param [file]
-     * @return java.lang.String
      **/
     public static String getFileMD5ByCodec(File file)
     {
@@ -197,11 +195,11 @@ public class FileUtil
     }
 
     /**
+     * @return java.lang.String
      * @Author summer
      * @Description Get the file's extension
      * @Date 14:40 2024/3/27
      * @Param [file]
-     * @return java.lang.String
      **/
     public static String getFileExtension(File file)
     {
@@ -209,30 +207,37 @@ public class FileUtil
         return extension;
     }
 
-
-    public void test()
+    /**
+     * @return byte[]
+     * @Author summer
+     * @Description File to byte[]
+     * @Date 15:50 2024/4/1
+     * @Param [file]
+     **/
+    public static byte[] file2Bytes(File file)
     {
-        Files files;
-        try
+        byte[] byteArray = new byte[(int) file.length()];
+        try (FileInputStream inputStream = new FileInputStream(file))
         {
-
+            inputStream.read(byteArray);
         }
-        catch (Exception e)
+        catch (FileNotFoundException e)
         {
             throw new RuntimeException(e);
         }
-
-        Path path;
-//        Path.of();
-//        Files.createFile()
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+        return byteArray;
     }
 
     /**
+     * @return java.lang.String
      * @Author summer
      * @Description 根据文件全部路径获取所在文件夹
      * @Date 10:32 2024/3/22
      * @Param [realPath]
-     * @return java.lang.String
      **/
     private static String getDirectory(String realPath)
     {
