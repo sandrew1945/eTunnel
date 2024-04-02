@@ -42,6 +42,8 @@ public class ETunnelServer
         try
         {
             ServerBootstrap server = new ServerBootstrap();
+            // Set the global configuration
+            server.childAttr(SERVER_CONFIG, serverConfiguration);
             server.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<NioSocketChannel>()
