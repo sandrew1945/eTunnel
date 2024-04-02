@@ -4,6 +4,7 @@ module com.sandrew.etunnel.core {
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.datatype.joda;
+    requires com.fasterxml.jackson.dataformat.toml;
     requires org.joda.time;
     requires hessian;
     requires org.apache.commons.codec;
@@ -17,13 +18,14 @@ module com.sandrew.etunnel.core {
     requires java.sql;
     requires org.apache.commons.io;
 
+
     opens com.sandrew.etunnel.protpcol to hessian;
 
     exports com.sandrew.etunnel.protpcol to com.sandrew.etunnel.server, com.sandrew.etunnel.client, com.fasterxml.jackson.databind, com.sandrew.etunnel.test;
     exports com.sandrew.etunnel.protpcol.serializer to com.sandrew.etunnel.server, com.sandrew.etunnel.client, hessian, com.sandrew.etunnel.test;
-    exports com.sandrew.etunnel.util to com.sandrew.etunnel.test, com.sandrew.etunnel.client;
+    exports com.sandrew.etunnel.util to com.sandrew.etunnel.test, com.sandrew.etunnel.client, com.sandrew.etunnel.server;
     exports com.sandrew.etunnel.handler;
-
+    exports com.sandrew.etunnel.config;
 
 
 }

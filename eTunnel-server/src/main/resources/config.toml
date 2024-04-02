@@ -1,0 +1,22 @@
+[local]
+disk.node01.id="bm9kZTAx"
+disk.node01.path=""
+disk.node01.role=["R", "W"]
+disk.node02.id="bm9kZTAy"
+disk.node02.path=""
+disk.node02.role=["R"]
+
+[remote.dropbox]
+dp01.account="db01Account"
+dp01.password="pwd01"
+dp01.token="ZGIwMUFjY291bnQ="
+dp01.root="foo"
+dp02.account="db02Account"
+dp02.password="pwd02"
+dp02.token="ZGIwMkFjY291bnQ="
+dp02.root="bar"
+
+[remote.onedrive]
+od01.account="od01Account"
+od01.token="pwd01"
+od01.root="foo"

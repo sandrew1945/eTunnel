@@ -1,5 +1,9 @@
 package com.sandrew.etunnel.server;
 
+import com.sandrew.etunnel.config.ConfigParser;
+
+import java.io.InputStream;
+
 /**
  * @ClassName ServerStarter
  * @Description
@@ -12,7 +16,10 @@ public class ServerStarter
     {
         try
         {
-            ETunnelServer server = new ETunnelServer();
+            // parse the configuration
+            InputStream is = ClassLoader.getSystemResourceAsStream("config.toml");
+            ConfigParser parser = new ConfigParser();
+            ETunnelServer server = new ETunnelServer(parser.parse(is));
             server.run(7000);
         }
         catch (InterruptedException e)

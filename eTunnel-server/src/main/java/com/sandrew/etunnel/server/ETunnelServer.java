@@ -1,8 +1,10 @@
 package com.sandrew.etunnel.server;
 
+import com.sandrew.etunnel.config.ServerConfiguration;
 import com.sandrew.etunnel.handler.ETunnelProtocolDecoder;
 import com.sandrew.etunnel.handler.ETunnelProtocolEncoder;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -14,6 +16,8 @@ import io.netty.util.concurrent.GenericFutureListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.sandrew.etunnel.util.Attributes.SERVER_CONFIG;
+
 /**
  * @ClassName ETunnelServer
  * @Description
@@ -24,11 +28,17 @@ public class ETunnelServer
 {
     private static Logger log = LoggerFactory.getLogger(FileUploadHandler.class);
 
+    public ETunnelServer(ServerConfiguration serverConfiguration)
+    {
+        this.serverConfiguration = serverConfiguration;
+    }
+
+    private ServerConfiguration serverConfiguration;
+
     public void run(int port) throws InterruptedException
     {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
-
         try
         {
             ServerBootstrap server = new ServerBootstrap();
@@ -60,21 +70,24 @@ public class ETunnelServer
 
     private void bind(final ServerBootstrap server, final int port)
     {
-        server.bind(port).addListener(new GenericFutureListener<Future<? super Void>>()
+        ChannelFuture future = server.bind(port);
+        future.addListener(new GenericFutureListener<Future<? super Void>>()
         {
             @Override
             public void operationComplete(Future<? super Void> future) throws Exception
             {
+
                 if (future.isSuccess())
                 {
-                    System.out.println("ETunnel server startup succuss at port:" + port);
+                    log.info("ETunnel server startup succuss at port:" + port);
                 }
                 else
                 {
-                    System.out.println("ETunnel server startup failed at port:" + port + ", try it again!");
+                    log.info("ETunnel server startup failed at port:" + port + ", try it again!");
                     bind(server, port + 1);
                 }
             }
         });
+
     }
 }
