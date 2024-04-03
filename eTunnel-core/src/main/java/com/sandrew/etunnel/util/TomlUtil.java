@@ -2,11 +2,12 @@ package com.sandrew.etunnel.util;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.sandrew.etunnel.config.ServerConfiguration;
+import com.sandrew.etunnel.config.Configurations;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,20 +41,41 @@ public class TomlUtil
      * @Description Load the configuration file to POJO
      * @Date 14:10 2024/4/2
      * @Param [inputStream]
-     * @return com.sandrew.etunnel.config.ServerConfiguration
+     * @return com.sandrew.etunnel.config.Configurations
      **/
-    public static ServerConfiguration loadConfig(InputStream inputStream)
+    public static Configurations loadConfig(InputStream inputStream)
     {
-        ServerConfiguration serverConfiguration = null;
+        Configurations configurations = null;
         try
         {
-            serverConfiguration = mapper.readValue(inputStream, ServerConfiguration.class);
+            configurations = mapper.readValue(inputStream, Configurations.class);
         }
         catch (IOException e)
         {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
-        return serverConfiguration;
+        return configurations;
+    }
+
+    /**
+     * @Author summer
+     * @Description Java object to toml string
+     * @Date 10:03 2024/4/3
+     * @Param [obj]
+     * @return java.lang.String
+     **/
+    public static String javaObject2String(Object obj)
+    {
+        String result = null;
+        try
+        {
+            result = mapper.writeValueAsString(obj);
+        }
+        catch (JsonProcessingException e)
+        {
+            log.error(e.getMessage(), e);
+        }
+        return result;
     }
 }

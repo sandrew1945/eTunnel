@@ -20,7 +20,7 @@ public class ServerStarter
             InputStream is = ClassLoader.getSystemResourceAsStream("config.toml");
             ConfigParser parser = new ConfigParser();
             ETunnelServer server = new ETunnelServer(parser.parse(is));
-            server.run(7000);
+            server.run();
         }
         catch (InterruptedException e)
         {

@@ -16,14 +16,14 @@ public class ConfigParser
 {
     private static Logger log = LoggerFactory.getLogger(ConfigParser.class);
 
-    public ServerConfiguration parse(InputStream is)
+    public Configurations parse(InputStream is)
     {
         log.info("Parse the configurations...");
         try
         {
-            ServerConfiguration serverConfiguration = TomlUtil.loadConfig(is);
-            log.debug("ServerConfiguration :"  + serverConfiguration);
-            return serverConfiguration;
+            Configurations configurations = TomlUtil.loadConfig(is);
+            log.debug("Configurations :"  + configurations);
+            return configurations;
         }
         catch (Exception e)
         {

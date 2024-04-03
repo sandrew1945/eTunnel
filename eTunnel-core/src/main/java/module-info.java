@@ -13,10 +13,9 @@ module com.sandrew.etunnel.core {
     requires io.netty.codec;
     requires io.netty.common;
     requires io.netty.handler;
-//    requires io.netty.handler.ssl.ocsp;
-//    requires io.netty.codec.xml;
     requires java.sql;
     requires org.apache.commons.io;
+    requires dropbox.core.sdk;
 
 
     opens com.sandrew.etunnel.protpcol to hessian;

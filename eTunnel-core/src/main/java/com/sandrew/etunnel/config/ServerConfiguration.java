@@ -4,37 +4,25 @@ package com.sandrew.etunnel.config;
  * @ClassName ServerConfiguration
  * @Description
  * @Author summer
- * @Date 2024/4/2 13:48
+ * @Date 2024/4/3 10:12
  **/
 public class ServerConfiguration
 {
-    private LocalConfiguration local;
+    private int port;
 
-    private RemoteConfiguration remote;
-
-    public LocalConfiguration getLocal()
+    public int getPort()
     {
-        return local;
+        return port;
     }
 
-    public void setLocal(LocalConfiguration local)
+    public void setPort(int port)
     {
-        this.local = local;
-    }
-
-    public RemoteConfiguration getRemote()
-    {
-        return remote;
-    }
-
-    public void setRemote(RemoteConfiguration remote)
-    {
-        this.remote = remote;
+        this.port = port;
     }
 
     @Override
     public String toString()
     {
-        return "ServerConfiguration{" + "local=" + local + ", remote=" + remote + '}';
+        return "ServerConfiguration{" + "port=" + port + '}';
     }
 }

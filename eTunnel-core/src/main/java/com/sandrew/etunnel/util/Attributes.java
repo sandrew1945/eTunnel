@@ -1,6 +1,6 @@
 package com.sandrew.etunnel.util;
 
-import com.sandrew.etunnel.config.ServerConfiguration;
+import com.sandrew.etunnel.config.Configurations;
 import io.netty.util.AttributeKey;
 
 /**
@@ -8,7 +8,7 @@ import io.netty.util.AttributeKey;
  */
 public interface Attributes
 {
-    static final AttributeKey<ServerConfiguration> SERVER_CONFIG = AttributeKey.newInstance("server.config");
+    static final AttributeKey<Configurations> SERVER_CONFIG = AttributeKey.newInstance("server.config");
 
 
 

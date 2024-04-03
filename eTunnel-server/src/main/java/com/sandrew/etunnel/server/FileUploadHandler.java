@@ -1,10 +1,13 @@
 package com.sandrew.etunnel.server;
 
+import com.sandrew.etunnel.config.Configurations;
+import com.sandrew.etunnel.config.DiskStorage;
 import com.sandrew.etunnel.protpcol.Command;
 import com.sandrew.etunnel.protpcol.ETunnelProtocol;
 import com.sandrew.etunnel.protpcol.UploadRequestPacket;
 import com.sandrew.etunnel.protpcol.UploadResponsePacket;
 import com.sandrew.etunnel.protpcol.serializer.Serializer;
+import com.sandrew.etunnel.util.FileUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
@@ -39,7 +42,13 @@ public class FileUploadHandler extends SimpleChannelInboundHandler<ETunnelProtoc
             log.debug("fileName : " + fileName);
             log.debug("uploadFile : " + uploadFile);
             log.debug("fileSize : " + fileSize);
-            log.debug("global config : " + ctx.channel().attr(SERVER_CONFIG).get());
+            Configurations configurations = ctx.channel().attr(SERVER_CONFIG).get();
+            log.debug("global config : " + configurations);
+
+            DiskStorage node = configurations.getLocalNodeByName("node01");
+            String dir = node.getPath();
+            FileUtil.upload(dir, fileName, uploadFile);
+
             // 返回响应信息
             UploadResponsePacket repsonse = new UploadResponsePacket(serializer);
             repsonse.setFileId(UUID.randomUUID().toString());

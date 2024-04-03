@@ -1,6 +1,6 @@
 package com.sandrew.etunnel.server;
 
-import com.sandrew.etunnel.config.ServerConfiguration;
+import com.sandrew.etunnel.config.Configurations;
 import com.sandrew.etunnel.handler.ETunnelProtocolDecoder;
 import com.sandrew.etunnel.handler.ETunnelProtocolEncoder;
 import io.netty.bootstrap.ServerBootstrap;
@@ -28,14 +28,14 @@ public class ETunnelServer
 {
     private static Logger log = LoggerFactory.getLogger(FileUploadHandler.class);
 
-    public ETunnelServer(ServerConfiguration serverConfiguration)
+    public ETunnelServer(Configurations configurations)
     {
-        this.serverConfiguration = serverConfiguration;
+        this.configurations = configurations;
     }
 
-    private ServerConfiguration serverConfiguration;
+    private Configurations configurations;
 
-    public void run(int port) throws InterruptedException
+    public void run() throws InterruptedException
     {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -43,7 +43,7 @@ public class ETunnelServer
         {
             ServerBootstrap server = new ServerBootstrap();
             // Set the global configuration
-            server.childAttr(SERVER_CONFIG, serverConfiguration);
+            server.childAttr(SERVER_CONFIG, configurations);
             server.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<NioSocketChannel>()
@@ -60,7 +60,7 @@ public class ETunnelServer
                     .option(ChannelOption.SO_BACKLOG, 1024)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            bind(server, port);
+            bind(server, configurations.getServerPort());
         }
         catch (Exception e)
         {

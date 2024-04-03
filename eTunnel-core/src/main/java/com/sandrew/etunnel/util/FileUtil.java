@@ -76,19 +76,17 @@ public class FileUtil
 
     public static boolean upload(String filePath, InputStream in) throws Exception
     {
-        BufferedOutputStream bos = null;
-        try
+        // 检测文件目录是否存在,如不存在,创建目录
+        File dir = new File(getDirectory(filePath));
+        if (!dir.exists())
         {
-            // 检测文件目录是否存在,如不存在,创建目录
-            File dir = new File(getDirectory(filePath));
-            if (!dir.exists())
-            {
-                dir.mkdirs();
-            }
-            // 创建目标文件
-            File file = new File(filePath);
-            // 创建输出流
-            bos = new BufferedOutputStream(new FileOutputStream(file));
+            dir.mkdirs();
+        }
+        // 创建目标文件
+        File file = new File(filePath);
+        try (FileOutputStream fos = new FileOutputStream(file);
+             BufferedOutputStream bos = new BufferedOutputStream(fos))
+        {
             // 缓冲读取要上传文件,并写到本地磁盘
             byte[] tmp = new byte[4 * 1024];
             int len = 0;
@@ -102,20 +100,27 @@ public class FileUtil
         {
             throw new Exception("write file error", e);
         }
-        finally
+    }
+
+    public static boolean upload(String filePath, byte[] fileBytes) throws Exception
+    {
+        // 检测文件目录是否存在,如不存在,创建目录
+        File dir = new File(getDirectory(filePath));
+        if (!dir.exists())
         {
-            // 关闭输出流
-            if (null != bos)
-            {
-                try
-                {
-                    bos.close();
-                }
-                catch (IOException e)
-                {
-                    throw new Exception("close file error", e);
-                }
-            }
+            dir.mkdirs();
+        }
+        // 创建目标文件
+        File file = new File(filePath);
+        try (FileOutputStream fos = new FileOutputStream(file);
+             BufferedOutputStream bos = new BufferedOutputStream(fos))
+        {
+            bos.write(fileBytes);
+            return true;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("write file error", e);
         }
     }
 
@@ -123,6 +128,11 @@ public class FileUtil
     public static boolean upload(String filePath, String fileName, InputStream in) throws Exception
     {
         return upload(filePath + File.separator + fileName, in);
+    }
+
+    public static boolean upload(String filePath, String fileName, byte[] fileBytes) throws Exception
+    {
+        return upload(filePath + File.separator + fileName, fileBytes);
     }
 
 
@@ -231,6 +241,30 @@ public class FileUtil
         }
         return byteArray;
     }
+
+    public void writeFile(String filePath, byte[] fileBytes)
+    {
+        String dirPath = getDirectory(filePath);
+        File directory = new File(dirPath);
+        if (!directory.exists())
+        {
+            directory.mkdirs();
+        }
+        try (FileOutputStream fos = new FileOutputStream(new File(filePath)))
+        {
+
+        }
+        catch (FileNotFoundException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
     /**
      * @return java.lang.String
