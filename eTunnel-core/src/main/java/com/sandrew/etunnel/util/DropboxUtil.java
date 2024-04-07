@@ -4,7 +4,10 @@ import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.http.HttpRequestor;
 import com.dropbox.core.http.StandardHttpRequestor;
 import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.FileMetadata;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
@@ -30,17 +33,24 @@ public class DropboxUtil
 //            System.out.println("Input dropboxAuthCode : " + dropboxAuthCode);
 //            DbxAuthFinish authFinish = dbxWebAuthNoRedirect.finish(dropboxAuthCode);
 //            String authAccessToken = authFinish.getAccessToken();
-            Proxy proxy = new Proxy(Proxy.Type.HTTP,new InetSocketAddress("127.0.0.1", 7891));
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 7890));
             StandardHttpRequestor.Config.Builder builder = StandardHttpRequestor.Config.builder().withProxy(proxy);
             HttpRequestor req = new StandardHttpRequestor(builder.build());
-            DbxRequestConfig config = DbxRequestConfig.newBuilder("dropbox/java-tutorial").withHttpRequestor(req).build();
-            DbxClientV2 client = new DbxClientV2(config, "sl.ByrCWZFOYoz9lKFGJ0ada3Z4ttMoKm5krIMKOt0bW5AJj9ybbRhVM28UtwCBXV4Rd9CBEF");
+            DbxRequestConfig config = DbxRequestConfig.newBuilder("dropbox/etunnel").withHttpRequestor(req).build();
+//            DbxRequestConfig config = DbxRequestConfig.newBuilder("dropbox/java").build();
+            DbxClientV2 client = new DbxClientV2(config, "sl.ByzavYmtoSL8r6k348Hm-5_i8I1Mn2b5WJNgwp3nNwpv1POHuvN");
 //            DbxClientV2 dbxClient = new DbxClientV2(config, authAccessToken);
 
             System.out.println("Dropbox Account Name: " + client.users().getCurrentAccount().getName());
+            try (InputStream in = new FileInputStream("/foo/bar/file.txt")) {
+                FileMetadata metadata = client.files().uploadBuilder("/foo/bar/file.txt")
+                        .uploadAndFinish(in);
+            }
+
         }
         catch (Exception e)
         {
+            System.out.println("Error: " + e.getMessage());
             throw new RuntimeException(e);
         }
 
