@@ -1,7 +1,14 @@
 package com.sandrew.etunnel.test.util;
 
+import com.sandrew.etunnel.config.ConfigParser;
+import com.sandrew.etunnel.config.Configurations;
+import com.sandrew.etunnel.util.DropboxUtil;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+
+import java.io.InputStream;
 
 /**
  * @ClassName DropboxClientTest
@@ -9,30 +16,26 @@ import org.junit.jupiter.api.Test;
  * @Author summer
  * @Date 2024/4/3 16:02
  **/
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DropboxClientTest
 {
 
-    @Test
-    @DisplayName("Authenticate dropbox")
-    public void authDropbox()
+    @BeforeAll
+    @DisplayName("Start to test dropbox client")
+    public void begin()
     {
-//        DbxAppInfo dbxAppInfo = new DbxAppInfo(dropBoxAppKey, dropBoxAppSecret);
-//        DbxRequestConfig dbxRequestConfig = new DbxRequestConfig(
-//                "JavaDropboxTutorial/1.0", Locale.getDefault().toString());
-//        DbxWebAuthNoRedirect dbxWebAuthNoRedirect = new DbxWebAuthNoRedirect(
-//                dbxRequestConfig, dbxAppInfo);
-//        String authorizeUrl = dbxWebAuthNoRedirect.start();
-//        System.out.println("1. Authorize: Go to URL and click Allow : "
-//                + authorizeUrl);
-//        System.out
-//                .println("2. Auth Code: Copy authorization code and input here ");
-//        String dropboxAuthCode = new BufferedReader(new InputStreamReader(
-//                System.in)).readLine().trim();
-//        DbxAuthFinish authFinish = dbxWebAuthNoRedirect.finish(dropboxAuthCode);
-//        String authAccessToken = authFinish.accessToken;
-//        dbxClient = new DbxClient(dbxRequestConfig, authAccessToken);
-//        System.out.println("Dropbox Account Name: "
-//                + dbxClient.getAccountInfo().displayName);
+        InputStream is = ClassLoader.getSystemResourceAsStream("config.toml");
+        ConfigParser parser = new ConfigParser();
+        Configurations configurations = parser.parse(is);
+        DropboxUtil dropboxUtil = new DropboxUtil(configurations.getRemote().getDropbox().get("dp01"));
+
+    }
+
+    @Test
+    @DisplayName("")
+    public void test()
+    {
+        System.out.println(1);
 
     }
 }

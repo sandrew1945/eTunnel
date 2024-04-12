@@ -1,22 +1,22 @@
 package com.sandrew.etunnel.server;
 
 import com.sandrew.etunnel.config.Configurations;
-import com.sandrew.etunnel.handler.ETunnelProtocolDecoder;
-import com.sandrew.etunnel.handler.ETunnelProtocolEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequestDecoder;
+import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.sandrew.etunnel.util.Attributes.SERVER_CONFIG;
 
 /**
  * @ClassName ETunnelServer
@@ -24,11 +24,11 @@ import static com.sandrew.etunnel.util.Attributes.SERVER_CONFIG;
  * @Author summer
  * @Date 2024/3/21 15:28
  **/
-public class ETunnelServer
+public class ETunnelHttpServer
 {
-    private static Logger log = LoggerFactory.getLogger(ETunnelServer.class);
+    private static Logger log = LoggerFactory.getLogger(ETunnelHttpServer.class);
 
-    public ETunnelServer(Configurations configurations)
+    public ETunnelHttpServer(Configurations configurations)
     {
         this.configurations = configurations;
     }
@@ -42,25 +42,23 @@ public class ETunnelServer
         try
         {
             ServerBootstrap server = new ServerBootstrap();
-            // Set the global configuration
-            server.childAttr(SERVER_CONFIG, configurations);
             server.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
-                    .childHandler(new ChannelInitializer<NioSocketChannel>()
+                    .childHandler(new ChannelInitializer<SocketChannel>()
                     {
                         @Override
-                        protected void initChannel(NioSocketChannel socketChannel) throws Exception
+                        protected void initChannel(SocketChannel socketChannel) throws Exception
                         {
-                            socketChannel.pipeline()
-                                    .addLast(new ETunnelProtocolDecoder())
-                                    .addLast(new ETunnelProtocolEncoder())
-                                    .addLast(new FileUploadHandler());
+                            socketChannel.pipeline().addLast("decoder", new HttpRequestDecoder())
+                                    .addLast("encoder", new HttpResponseEncoder())
+                                    .addLast("aggregator", new HttpObjectAggregator(1024 * 1024))
+                                    .addLast("handler", new HttpServerHandler());
                         }
                     })
-                    .option(ChannelOption.SO_BACKLOG, 1024)
+                    .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            bind(server, configurations.getETunnelServerPort());
+            bind(server, this.configurations.getHttpServerPort());
         }
         catch (Exception e)
         {
@@ -81,11 +79,11 @@ public class ETunnelServer
 
                 if (future.isSuccess())
                 {
-                    log.info("ETunnel server startup succuss at port:" + port);
+                    log.info("ETunnel http server startup succuss at port:" + port);
                 }
                 else
                 {
-                    log.info("ETunnel server startup failed at port:" + port + ", try it again!");
+                    log.info("ETunnel http server startup failed at port:" + port + ", try it again!");
                     bind(server, port + 1);
                 }
             }

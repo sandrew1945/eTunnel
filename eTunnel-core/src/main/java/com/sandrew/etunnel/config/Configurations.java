@@ -55,9 +55,21 @@ public class Configurations
      * @Param []
      * @return int
      **/
-    public int getServerPort()
+    public int getETunnelServerPort()
     {
-        return this.server.getPort();
+        return this.server.getEtunnelPort();
+    }
+
+    /**
+     * @Author summer
+     * @Description Get httpserver startup port
+     * @Date 10:45 2024/4/12
+     * @Param []
+     * @return int
+     **/
+    public int getHttpServerPort()
+    {
+        return this.server.getHttpserverPort();
     }
 
     /**

@@ -1,25 +1,34 @@
 [server]
-port=7000
+etunnel-port=7000
+httpserver-port=8000
+proxy-address="127.0.0.1"
+proxy-port=7890
 
 [local]
 disk.node01.id="bm9kZTAx"
 disk.node01.path=""
-disk.node01.role=["R", "W"]
+disk.node01.authority=["R", "W"]
 disk.node02.id="bm9kZTAy"
 disk.node02.path=""
-disk.node02.role=["R"]
+disk.node02.authority=["R"]
 
 [remote.dropbox]
-dp01.account="db01Account"
-dp01.password="pwd01"
-dp01.token="ZGIwMUFjY291bnQ="
-dp01.root="foo"
-dp02.account="db02Account"
-dp02.password="pwd02"
-dp02.token="ZGIwMkFjY291bnQ="
-dp02.root="bar"
+dp01.appkey="db01Account"
+dp01.appsecret="pwd01"
+dp01.refresh-token="ZGIwMUFjY291bnQ="
+dp01.use-proxy=true
+dp01.root="/"
+dp01.authority=["R", "W"]
+dp02.appkey="db02Account"
+dp02.appsecret="pwd02"
+dp02.refresh-token="ZGIwMkFjY291bnQ="
+dp02.use-proxy=true
+dp02.root="/"
+dp02.authority=["R"]
 
 [remote.onedrive]
 od01.account="od01Account"
 od01.token="pwd01"
-od01.root="foo"
+od01.use-proxy=true
+od01.root="/foo"
+od01.authority=["R", "W"]

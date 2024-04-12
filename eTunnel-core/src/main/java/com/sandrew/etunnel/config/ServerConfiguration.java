@@ -1,5 +1,7 @@
 package com.sandrew.etunnel.config;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @ClassName ServerConfiguration
  * @Description
@@ -8,21 +10,58 @@ package com.sandrew.etunnel.config;
  **/
 public class ServerConfiguration
 {
-    private int port;
+    @JsonProperty("etunnel-port")
+    private int etunnelPort;
+    @JsonProperty("httpserver-port")
+    private int httpserverPort;
+    @JsonProperty("proxy-address")
+    private String proxyAddress;
+    @JsonProperty("proxy-port")
+    private int proxyPort;
 
-    public int getPort()
+    public int getEtunnelPort()
     {
-        return port;
+        return etunnelPort;
     }
 
-    public void setPort(int port)
+    public void setEtunnelPort(int etunnelPort)
     {
-        this.port = port;
+        this.etunnelPort = etunnelPort;
+    }
+
+    public int getHttpserverPort()
+    {
+        return httpserverPort;
+    }
+
+    public void setHttpserverPort(int httpserverPort)
+    {
+        this.httpserverPort = httpserverPort;
+    }
+
+    public String getProxyAddress()
+    {
+        return proxyAddress;
+    }
+
+    public void setProxyAddress(String proxyAddress)
+    {
+        this.proxyAddress = proxyAddress;
+    }
+
+    public int getProxyPort()
+    {
+        return proxyPort;
+    }
+
+    public void setProxyPort(int proxyPort)
+    {
+        this.proxyPort = proxyPort;
     }
 
     @Override
     public String toString()
     {
-        return "ServerConfiguration{" + "port=" + port + '}';
+        return "ServerConfiguration{" + "etunnelPort=" + etunnelPort + ", httpserverPort=" + httpserverPort + ", proxyAddress='" + proxyAddress + '\'' + ", proxyPort=" + proxyPort + '}';
     }
 }

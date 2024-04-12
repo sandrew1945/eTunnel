@@ -6,6 +6,7 @@ module com.sandrew.etunnel.server {
     requires io.netty.codec;
     requires io.netty.common;
     requires io.netty.handler;
+    requires io.netty.codec.http;
     requires org.slf4j;
 
     exports com.sandrew.etunnel.server;

@@ -22,6 +22,17 @@ public class ConfigParser
         try
         {
             Configurations configurations = TomlUtil.loadConfig(is);
+            // handle dropbox's proxy
+            configurations.getRemote().getDropbox().entrySet().stream().filter(entry -> entry.getValue().isUseProxy() == true).forEach(dropboxStorageEntry -> {
+                DropboxStorage storage = dropboxStorageEntry.getValue();
+                storage.useProxy(configurations.getServer().getProxyAddress(), configurations.getServer().getProxyPort());
+            });
+
+            // handle one-drive's proxy
+            configurations.getRemote().getOnedrive().entrySet().stream().filter(entry -> entry.getValue().isUseProxy() == true).forEach(oneDriveStorageEntry -> {
+                OneDriveStorage storage = oneDriveStorageEntry.getValue();
+                storage.useProxy(configurations.getServer().getProxyAddress(), configurations.getServer().getProxyPort());
+        });
             log.debug("Configurations :"  + configurations);
             return configurations;
         }

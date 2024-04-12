@@ -1,48 +1,82 @@
 package com.sandrew.etunnel.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.util.List;
+
 /**
  * @ClassName DropboxStorage
  * @Description
  * @Author summer
  * @Date 2024/4/2 13:56
  **/
-public class DropboxStorage
+public class DropboxStorage implements UseProxy
 {
-    private String account;
-    private String password;
-    private String token;
-
+    private String appkey;
+    private String appsecret;
+    @JsonProperty("refresh-token")
+    private String refreshToken;
+    @JsonProperty("use-proxy")
+    private boolean useProxy;
     private String root;
+    private List<String> authority;
+    @JsonIgnore
+    private Proxy _proxy = Proxy.NO_PROXY;
 
-
-    public String getAccount()
+    @Override
+    public void useProxy(String proxyAddress, int proxyPort)
     {
-        return account;
+        this._proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyAddress, proxyPort));
     }
 
-    public void setAccount(String account)
+
+    @Override
+    public Proxy getProxy()
     {
-        this.account = account;
+        return this._proxy;
     }
 
-    public String getPassword()
+    public String getAppkey()
     {
-        return password;
+        return appkey;
     }
 
-    public void setPassword(String password)
+    public void setAppkey(String appkey)
     {
-        this.password = password;
+        this.appkey = appkey;
     }
 
-    public String getToken()
+    public String getAppsecret()
     {
-        return token;
+        return appsecret;
     }
 
-    public void setToken(String token)
+    public void setAppsecret(String appsecret)
     {
-        this.token = token;
+        this.appsecret = appsecret;
+    }
+
+    public String getRefreshToken()
+    {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken)
+    {
+        this.refreshToken = refreshToken;
+    }
+
+    public boolean isUseProxy()
+    {
+        return useProxy;
+    }
+
+    public void setUseProxy(boolean useProxy)
+    {
+        this.useProxy = useProxy;
     }
 
     public String getRoot()
@@ -55,9 +89,29 @@ public class DropboxStorage
         this.root = root;
     }
 
+    public List<String> getAuthority()
+    {
+        return authority;
+    }
+
+    public void setAuthority(List<String> authority)
+    {
+        this.authority = authority;
+    }
+
+    public Proxy get_proxy()
+    {
+        return _proxy;
+    }
+
+    public void set_proxy(Proxy _proxy)
+    {
+        this._proxy = _proxy;
+    }
+
     @Override
     public String toString()
     {
-        return "DropboxStorage{" + "account='" + account + '\'' + ", password='" + password + '\'' + ", token='" + token + '\'' + ", root='" + root + '\'' + '}';
+        return "DropboxStorage{" + "appkey='" + appkey + '\'' + ", appsecret='" + appsecret + '\'' + ", refreshToken='" + refreshToken + '\'' + ", useProxy=" + useProxy + ", root='" + root + '\'' + ", authority=" + authority + '}';
     }
 }

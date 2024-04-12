@@ -1,6 +1,7 @@
 package com.sandrew.etunnel.test.util;
 
 import com.sandrew.etunnel.config.ConfigParser;
+import com.sandrew.etunnel.config.Configurations;
 import com.sandrew.etunnel.config.DiskStorage;
 import com.sandrew.etunnel.util.TomlUtil;
 import org.junit.jupiter.api.Assertions;
@@ -29,7 +30,7 @@ public class TomlUtilTest
         DiskStorage diskStorage = new DiskStorage();
         diskStorage.setId("id");
         diskStorage.setPath("path");
-        diskStorage.setRole(new ArrayList<String>());
+        diskStorage.setAuthority(new ArrayList<String>());
 
         String tomlStr = TomlUtil.javaObject2String(diskStorage);
         log.info(tomlStr);
@@ -42,9 +43,10 @@ public class TomlUtilTest
     {
         InputStream is = ClassLoader.getSystemResourceAsStream("config.toml");
         ConfigParser parser = new ConfigParser();
-        String configStr = TomlUtil.javaObject2String(parser.parse(is));
-        log.info(configStr);
-        Assertions.assertNotNull(configStr);
+        Configurations configurations = parser.parse(is);
+//        String configStr = TomlUtil.javaObject2String(parser.parse(is));
+//        log.info(configStr);
+        Assertions.assertNotNull(configurations.getServer().getEtunnelPort());
     }
 
 }

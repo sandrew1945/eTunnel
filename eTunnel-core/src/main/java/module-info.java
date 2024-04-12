@@ -16,6 +16,7 @@ module com.sandrew.etunnel.core {
     requires java.sql;
     requires org.apache.commons.io;
     requires dropbox.core.sdk;
+    requires org.apache.commons.lang3;
 
 
     opens com.sandrew.etunnel.protpcol to hessian;

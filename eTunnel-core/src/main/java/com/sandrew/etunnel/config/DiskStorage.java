@@ -14,7 +14,7 @@ public class DiskStorage
 
     private String path;
 
-    List<String> role;
+    private List<String> authority;
 
     public String getId()
     {
@@ -36,19 +36,19 @@ public class DiskStorage
         this.path = path;
     }
 
-    public List<String> getRole()
+    public List<String> getAuthority()
     {
-        return role;
+        return authority;
     }
 
-    public void setRole(List<String> role)
+    public void setAuthority(List<String> authority)
     {
-        this.role = role;
+        this.authority = authority;
     }
 
     @Override
     public String toString()
     {
-        return "DiskStorage{" + "id='" + id + '\'' + ", path='" + path + '\'' + ", role=" + role + '}';
+        return "DiskStorage{" + "id='" + id + '\'' + ", path='" + path + '\'' + ", authority=" + authority + '}';
     }
 }
