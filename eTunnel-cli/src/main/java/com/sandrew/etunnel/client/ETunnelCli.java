@@ -33,12 +33,21 @@ public class ETunnelCli
 //        client.run("127.0.0.1", 7000);
     }
 
+    public static String chunkedUploadFile(File largeFile)
+    {
+        ETunnelStreamClient client = new ETunnelStreamClient();
+        client.connect("10.6.33.61", 7000);
+        return client.chunkedFileUpload(largeFile);
+    }
+
 
     public static void main(String[] args)
     {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            String fileId = uploadFile(new File("/foo/bar/file.txt"));
-            log.info("fileId =======> " + fileId);
+//            String fileId = uploadFile(new File("/Users/summer/Desktop/111.jpg"));
+//            log.info("fileId =======> " + fileId);
+            String s = chunkedUploadFile(new File("/Users/summer/Documents/Other/学习资料/Java/Hadoop/HADOOP权威指南 第3版  PDF电子书下载 带目录书签 完整版.pdf"));
+            log.info("s =========> " + s);
         }));
     }
 }

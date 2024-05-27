@@ -26,6 +26,7 @@ module com.sandrew.etunnel.core {
     exports com.sandrew.etunnel.util to com.sandrew.etunnel.test, com.sandrew.etunnel.client, com.sandrew.etunnel.server;
     exports com.sandrew.etunnel.handler;
     exports com.sandrew.etunnel.config;
+    exports com.sandrew.etunnel.exception;
 
 
 }

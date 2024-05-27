@@ -1,7 +1,5 @@
 package com.sandrew.etunnel.client;
 
-import com.sandrew.etunnel.handler.ETunnelProtocolDecoder;
-import com.sandrew.etunnel.handler.ETunnelProtocolEncoder;
 import com.sandrew.etunnel.protpcol.UploadRequestPacket;
 import com.sandrew.etunnel.protpcol.UploadResponsePacket;
 import com.sandrew.etunnel.protpcol.serializer.HessianSerializer;
@@ -12,6 +10,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.stream.ChunkedWriteHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,13 +23,15 @@ import java.util.concurrent.TimeUnit;
  * @Author summer
  * @Date 2024/3/25 15:45
  **/
-public class ETunnelClient
+public class ETunnelStreamClient
 {
 
     private static Logger log = LoggerFactory.getLogger(FileUploadHandler.class);
     private static EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     private FileUploadHandler fileUploadHandler = new FileUploadHandler();
+
+    private ChunkedFileUploadHandler chunkedFileUploadHandler = new ChunkedFileUploadHandler();
 
     private Channel endpoint = null;
 
@@ -48,9 +49,7 @@ public class ETunnelClient
                         protected void initChannel(SocketChannel ch) throws Exception
                         {
                             ch.pipeline()
-                                    .addLast("decoder", new ETunnelProtocolDecoder())
-                                    .addLast("encoder", new ETunnelProtocolEncoder())
-                                    .addLast("file_upload", fileUploadHandler);
+                                    .addLast("chunkedWriteHandler", new ChunkedWriteHandler());
                         }
                     });
             this.endpoint = doConnect(client, host, port, 5);
@@ -131,25 +130,18 @@ public class ETunnelClient
             throw new RuntimeException(e);
         }
     }
-//    public String chunkedFileUpload(File file, Serializer serializer)
-//    {
-//        try
-//        {
-//            ChunkedUploadRequestPacket packet = new ChunkedUploadRequestPacket(serializer);
-//            packet.setFileName(file.getName());
-//            packet.setFile(file);
-//            packet.setFileMD5(FileUtil.getFileMD5(file));
-//            packet.setFileSuffix(FileUtil.getFileExtension(file));
-//            packet.setFileSize(file.length());
-//            //        this.endpoint.writeAndFlush(new ETunnelProtocol(packet));
-//            //            UploadResponsePacket uploadResponsePacket = fileUploadHandler.sendData(this.endpoint, packet).receiveData();
-//            UploadResponsePacket uploadResponsePacket = fileUploadHandler.sendAndReceive(this.endpoint, packet);
-//            return uploadResponsePacket.getFileId();
-//        }
-//        catch (InterruptedException e)
-//        {
-//            log.error(e.getMessage(), e);
-//            throw new RuntimeException(e);
-//        }
-//    }
+
+    public String chunkedFileUpload(File file)
+    {
+        try
+        {
+            chunkedFileUploadHandler.sendData(this.endpoint, file);
+            return "abc";
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
 }

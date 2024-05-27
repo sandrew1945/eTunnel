@@ -21,9 +21,10 @@ public class ServerStarter
             InputStream is = ClassLoader.getSystemResourceAsStream("config.toml");
             ConfigParser parser = new ConfigParser();
             Configurations config = parser.parse(is);
-            ETunnelServer server = new ETunnelServer(config);
-            server.run();
-            ETunnelHttpServer httpServer = new ETunnelHttpServer(config);
+//            ETunnelServer server = new ETunnelServer(config);
+//            server.run();
+//            ETunnelHttpServer httpServer = new ETunnelHttpServer(config);
+            ETunnelStreamServer httpServer = new ETunnelStreamServer(config);
             httpServer.run();
         }
         catch (InterruptedException e)

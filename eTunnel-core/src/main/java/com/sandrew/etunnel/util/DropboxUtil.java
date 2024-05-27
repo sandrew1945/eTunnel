@@ -1,8 +1,6 @@
 package com.sandrew.etunnel.util;
 
-import com.dropbox.core.DbxAppInfo;
-import com.dropbox.core.DbxException;
-import com.dropbox.core.DbxRequestConfig;
+import com.dropbox.core.*;
 import com.dropbox.core.http.HttpRequestor;
 import com.dropbox.core.http.StandardHttpRequestor;
 import com.dropbox.core.oauth.DbxCredential;
@@ -18,10 +16,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 
 /**
  * @ClassName DropboxUtil
@@ -53,6 +50,42 @@ public class DropboxUtil
         {
             throw new RuntimeException(e);
         }
+    }
+
+    public DropboxUtil()
+    {
+    }
+
+    public DbxClientV2 authDropbox() throws IOException, DbxException
+    {
+        try
+        {
+            DbxAppInfo dbxAppInfo = new DbxAppInfo("", "");
+            //        DbxRequestConfig dbxRequestConfig = new DbxRequestConfig("JavaDropboxTutorial/1.0", Locale.getDefault().toString());
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 7890));
+            StandardHttpRequestor.Config.Builder builder = StandardHttpRequestor.Config.builder().withProxy(proxy);
+            HttpRequestor req = new StandardHttpRequestor(builder.build());
+            DbxRequestConfig config = DbxRequestConfig.newBuilder("dropbox/etunnel").withHttpRequestor(req).build();
+            DbxWebAuthNoRedirect dbxWebAuthNoRedirect = new DbxWebAuthNoRedirect(config, dbxAppInfo);
+            String authorizeUrl = dbxWebAuthNoRedirect.start();
+            System.out.println("1. Authorize: Go to URL and click Allow : " + authorizeUrl);
+            System.out.println("2. Auth Code: Copy authorization code and input here ");
+            //        String dropboxAuthCode = new BufferedReader(new InputStreamReader(System.in)).readLine().trim();
+            //        DbxAuthFinish authFinish = dbxWebAuthNoRedirect.finish(dropboxAuthCode);
+            //        String authAccessToken = authFinish.getAccessToken();
+            //        System.out.println("Access Token : " + authAccessToken);
+            //        dbxClient = new DbxClientV2(config, authAccessToken);
+            //        new DbxCredential(null, -1L, credential.getRefreshToken(), credential.getAppKey());
+            dbxClient = new DbxClientV2(config, "");
+//            System.out.println("Dropbox Account Name: " + dbxClient.users().getCurrentAccount().getName());
+        }
+        catch (Exception e)
+        {
+//            System.out.println("error:" + e.getAuthError().tag().name());
+            throw new RuntimeException(e);
+        }
+
+        return dbxClient;
     }
 
     private DbxAppInfo getAppInfo()
@@ -141,6 +174,12 @@ public class DropboxUtil
                 case OTHER -> throw new DropboxException("Unknown error", e);
             }
         }
+        catch (InvalidAccessTokenException ie)
+        {
+            log.debug("WARNING: Expired access token");
+            this.refreshAccessToken();
+            this.createFolder(folderName);
+        }
         catch (DbxException e)
         {
             throw new RuntimeException(e);
@@ -168,6 +207,12 @@ public class DropboxUtil
             //            DbxEntry.File downloadedFile = dbxClient.getFile("/" + fileName, null, outputStream);
             System.out.println("Metadata: " + fileMetadata.getName());
         }
+        catch (InvalidAccessTokenException ie)
+        {
+            log.debug("WARNING: Expired access token");
+            this.refreshAccessToken();
+            this.downloadFromDropbox(fileName);
+        }
         finally
         {
             outputStream.close();
@@ -183,11 +228,16 @@ public class DropboxUtil
      **/
     public String shareFile(String absoluteFilePath) throws DropboxException
     {
-
+        String sharedUrl = null;
         try
         {
-            String sharedUrl = dbxClient.sharing().createSharedLinkWithSettings(absoluteFilePath).getUrl();
-            return sharedUrl;
+            sharedUrl = dbxClient.sharing().createSharedLinkWithSettings(absoluteFilePath).getUrl();
+        }
+        catch (InvalidAccessTokenException ie)
+        {
+            log.debug("WARNING: Expired access token");
+            this.refreshAccessToken();
+            this.shareFile(absoluteFilePath);
         }
         catch (DbxException e)
         {
@@ -205,6 +255,7 @@ public class DropboxUtil
             log.error(e.getMessage(), e);
             throw new DropboxException("Share file failure.", e);
         }
+        return sharedUrl;
     }
 
     public String getShareLink(String absoluteFilePath) throws DropboxException
@@ -220,4 +271,16 @@ public class DropboxUtil
             throw new DropboxException("Get file of " + absoluteFilePath + " share link failure.", e);
         }
     }
+
+    public static void main(String[] args) throws IOException, DbxException, DropboxException
+    {
+        RandomAccessFile raf = new RandomAccessFile(new File(""), "r");
+//        ChunkedFile<byte> chunkedFile;
+//        chunkedFile.readChunk()
+
+        DropboxUtil util = new DropboxUtil();
+        util.authDropbox();
+        util.createFolder("/auth/test");
+    }
+
 }

@@ -32,28 +32,40 @@ public class FileUploadHandler extends SimpleChannelInboundHandler<ETunnelProtoc
             log.info("Server start to handle file upload.");
             Serializer serializer = Serializer.getSerializerByType(msg.getAlgorithm());
             UploadRequestPacket packet = serializer.deserialize(msg.getContent(), UploadRequestPacket.class);
-            String fileMD5 = packet.getFileMD5();
-            String fileName = packet.getFileName();
-            long fileSize = packet.getFileSize();
-            String fileSuffix = packet.getFileSuffix();
-            byte[] uploadFile = packet.getFile();
-            log.debug("file transmit size : " + uploadFile.length);
-            log.debug("fileMD5 : " + fileMD5);
-            log.debug("fileName : " + fileName);
-            log.debug("uploadFile : " + uploadFile);
-            log.debug("fileSize : " + fileSize);
-            Configurations configurations = ctx.channel().attr(SERVER_CONFIG).get();
-            log.debug("global config : " + configurations);
+            try
+            {
 
-            DiskStorage node = configurations.getLocalNodeByName("node01");
-            String dir = node.getPath();
-            FileUtil.upload(dir, fileName, uploadFile);
+                String fileMD5 = packet.getFileMD5();
+                String fileName = packet.getFileName();
+                long fileSize = packet.getFileSize();
+                String fileSuffix = packet.getFileSuffix();
+                byte[] uploadFile = packet.getFile();
+                log.debug("file transmit size : " + uploadFile.length);
+                log.debug("fileMD5 : " + fileMD5);
+                log.debug("fileName : " + fileName);
+                log.debug("uploadFile : " + uploadFile);
+                log.debug("fileSize : " + fileSize);
+                Configurations configurations = ctx.channel().attr(SERVER_CONFIG).get();
+                log.debug("global config : " + configurations);
 
-            // 返回响应信息
-            UploadResponsePacket repsonse = new UploadResponsePacket(serializer);
-            repsonse.setFileId(UUID.randomUUID().toString());
-            repsonse.setFileUrl("");
-            ctx.writeAndFlush(new ETunnelProtocol(repsonse));
+                DiskStorage node = configurations.getLocalNodeByName("node01");
+                String dir = node.getPath();
+                FileUtil.upload(dir, fileName, uploadFile);
+
+                // 返回响应信息
+                UploadResponsePacket repsonse = new UploadResponsePacket(serializer);
+                repsonse.setFileId(UUID.randomUUID().toString());
+                repsonse.setFileUrl("");
+                ctx.writeAndFlush(new ETunnelProtocol(repsonse));
+            }
+            catch (Exception e)
+            {
+                log.error(e.getMessage(), e);
+                UploadResponsePacket repsonse = new UploadResponsePacket(serializer);
+                repsonse.setFileId(e.getMessage());
+                ctx.writeAndFlush(new ETunnelProtocol(repsonse));
+//                throw new RuntimeException(e);
+            }
         }
         else
         {

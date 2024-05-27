@@ -12,8 +12,8 @@ public enum Command
     UPLOAD_RES((byte) 1),           // file upload response
     BREAK_POINT_REQ((byte) 2),      // file break point upload request
     BREAK_POINT_RES((byte) 3),      // file break point upload response
-    STREAM_UPLOAD_REQ((byte) 4),    // file stream upload request
-    STREAM_UPLOAD_RES((byte) 5),    // file stream upload response
+    CHUNKED_UPLOAD_REQ((byte) 4),    // file chunked upload request
+    CHUNKED_UPLOAD_RES((byte) 5),    // file chunked upload response
     DOWNLOAD_REQ((byte) 6),         // file download request
     DOWNLOAD_RES((byte) 7),         // file download response
     STREAM_DOWNLOAD_REQ((byte) 8),  // file stream download request
